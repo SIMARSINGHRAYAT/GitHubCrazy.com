@@ -1,5 +1,5 @@
-import prisma from './db';
-import type { ApiRequest, ApiResponse } from './types';
+import prisma from './db.js';
+import type { ApiRequest, ApiResponse } from './types.js';
 
 interface ProfileCard {
   id: string;
