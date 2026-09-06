@@ -1,5 +1,5 @@
-import prisma from '../../db';
-import type { NextApiRequest, NextApiResponse } from 'next';
+import prisma from './db';
+import type { ApiRequest, ApiResponse } from './types';
 
 interface ProfileCard {
   id: string;
@@ -13,8 +13,8 @@ interface ProfileCard {
 }
 
 export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<{ profiles: ProfileCard[] } | { error: string }>
+  req: ApiRequest,
+  res: ApiResponse<{ profiles: ProfileCard[] } | { error: string }>
 ) {
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });

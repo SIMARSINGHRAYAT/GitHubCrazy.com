@@ -19,3 +19,4 @@ dist-ssr
 !.vscode/extensions.json
 .DS_Store
 node_modules
+.env*

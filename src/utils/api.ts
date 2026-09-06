@@ -47,7 +47,12 @@ export async function checkUserStatus(token: string): Promise<UserStatus> {
   });
 
   if (!res.ok) {
-    throw new Error('Failed to check user status');
+    try {
+      const errorData = await res.json();
+      throw new Error(errorData.error || 'Failed to check user status');
+    } catch (e) {
+      throw new Error(`HTTP ${res.status}: Failed to check user status`);
+    }
   }
 
   return res.json();

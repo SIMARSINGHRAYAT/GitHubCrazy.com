@@ -1,5 +1,5 @@
-import prisma from '../../db';
-import type { NextApiRequest, NextApiResponse } from 'next';
+import prisma from '../db';
+import type { ApiRequest, ApiResponse } from '../types';
 
 interface UserProfileResponse {
   id: string;
@@ -16,8 +16,8 @@ interface UserProfileResponse {
 }
 
 export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<UserProfileResponse | UserProfileResponse[] | { error: string }>
+  req: ApiRequest,
+  res: ApiResponse<UserProfileResponse | UserProfileResponse[] | { error: string }>
 ) {
   const { userId } = req.query;
 

@@ -9,11 +9,11 @@
  */
 
 import prisma from './db';
-import type { NextApiRequest, NextApiResponse } from 'next';
+import type { ApiRequest, ApiResponse } from './types';
 
 export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
+  req: ApiRequest,
+  res: ApiResponse
 ) {
   // Security: Only allow GET in development or preview
   if (req.method !== 'GET') {

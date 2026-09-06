@@ -1,5 +1,5 @@
-import prisma from '../../db';
-import type { NextApiRequest, NextApiResponse } from 'next';
+import prisma from './db';
+import type { ApiRequest, ApiResponse } from './types';
 
 const MAX_FOLLOWS_PER_DAY = 10;
 
@@ -28,8 +28,8 @@ function getToday(): Date {
 }
 
 export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<FollowResponse | { error: string }>
+  req: ApiRequest,
+  res: ApiResponse<FollowResponse | { error: string }>
 ) {
   const authHeader = req.headers.authorization;
   if (!authHeader) {
