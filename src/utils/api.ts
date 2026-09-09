@@ -47,12 +47,18 @@ export async function checkUserStatus(token: string): Promise<UserStatus> {
   });
 
   if (!res.ok) {
+    let message = `HTTP ${res.status}: Failed to check user status`;
+
     try {
-      const errorData = await res.json();
-      throw new Error(errorData.error || 'Failed to check user status');
-    } catch (e) {
-      throw new Error(`HTTP ${res.status}: Failed to check user status`);
+      const errorData = await res.json() as { error?: string };
+      if (errorData.error) {
+        message = errorData.error;
+      }
+    } catch {
+      // Keep the HTTP fallback when the response is not JSON.
     }
+
+    throw new Error(message);
   }
 
   return res.json();
