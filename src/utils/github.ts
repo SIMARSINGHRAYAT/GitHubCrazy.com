@@ -940,7 +940,13 @@ export async function followUser(token: string, targetUser: string): Promise<voi
     method: 'PUT',
     headers: { 'Content-Length': '0' }
   });
-  if (res.status !== 204) throw new Error('Failed to follow user');
+  if (res.status !== 204) {
+    const error = await res.json().catch(() => ({ message: res.statusText })) as { message?: string };
+    if (res.status === 403) {
+      throw new Error('GitHub denied the follow request. Please sign out and sign in again to grant the user:follow permission.');
+    }
+    throw new Error(error.message || `Failed to follow user (HTTP ${res.status})`);
+  }
 }
 
 /**
