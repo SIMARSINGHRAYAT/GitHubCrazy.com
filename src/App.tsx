@@ -150,11 +150,11 @@ export default function App() {
       setUser(githubUser); setUserEmail(email); setToken(token);
       setRepos(repoData);
       
-      // Check user status to determine if returning user with requirements met
+      // GitHub is the source of truth: completed requirements skip onboarding,
+      // even when this is the first local database record for the user.
       checkUserStatus(token)
         .then(status => {
-          // If returning user with all requirements complete, show features; otherwise show support
-          if (!status.isNew && status.requirementsComplete) {
+          if (status.requirementsComplete) {
             setAppStep('features');
           } else {
             setAppStep('support');
