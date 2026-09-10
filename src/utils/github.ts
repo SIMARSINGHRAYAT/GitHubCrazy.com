@@ -924,8 +924,7 @@ export async function checkRepoStarred(token: string, owner: string, repo: strin
 
 export async function starRepo(token: string, owner: string, repo: string): Promise<void> {
   const res = await ghFetch(`/user/starred/${owner}/${repo}`, token, {
-    method: 'PUT',
-    headers: { 'Content-Length': '0' }
+    method: 'PUT'
   });
   if (res.status !== 204) throw new Error('Failed to star repository');
 }
@@ -937,8 +936,7 @@ export async function checkUserFollowed(token: string, targetUser: string): Prom
 
 export async function followUser(token: string, targetUser: string): Promise<void> {
   const res = await ghFetch(`/user/following/${targetUser}`, token, {
-    method: 'PUT',
-    headers: { 'Content-Length': '0' }
+    method: 'PUT'
   });
   if (res.status !== 204) {
     const error = await res.json().catch(() => ({ message: res.statusText })) as { message?: string };
