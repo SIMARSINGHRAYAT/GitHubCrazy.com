@@ -48,9 +48,8 @@ export function SupportProject({ token, onComplete }: SupportProjectProps) {
     setError('');
     try {
       await starRepo(token, repoOwner, repoName);
-      // Re-verify status from server after action
-      const status = await checkUserStatus(token);
-      setIsStarred(status.repositoryStarred);
+      setIsStarred(true);
+      void checkUserStatus(token).catch(() => undefined);
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -64,9 +63,8 @@ export function SupportProject({ token, onComplete }: SupportProjectProps) {
     setError('');
     try {
       await followUser(token, MAINTAINER_PROFILE);
-      // Re-verify status from server after action
-      const status = await checkUserStatus(token);
-      setIsFollowed(status.maintainerFollowed);
+      setIsFollowed(true);
+      void checkUserStatus(token).catch(() => undefined);
     } catch (err: any) {
       setError(err.message);
     } finally {
