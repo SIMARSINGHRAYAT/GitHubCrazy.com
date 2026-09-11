@@ -31,6 +31,11 @@ DATABASE_URL=postgresql://user:password@host/database
 GITHUB_CLIENT_ID=your_github_client_id
 GITHUB_CLIENT_SECRET=your_github_client_secret
 GITHUB_REDIRECT_URI=https://yourdomain.com/api/auth/github/callback
+
+# Optional support-project defaults
+SUPPORT_REPO_OWNER=SIMARSINGHRAYAT
+SUPPORT_REPO_NAME=GitHubCrazy.com
+SUPPORT_MAINTAINER=SIMARSINGHRAYAT
 ```
 
 ### How to Get GitHub Credentials
@@ -58,18 +63,21 @@ npm run build
 # Deploy dist/ folder to your host
 ```
 
-## Step 4: Run Database Migrations
+## Step 4: Create or Update Database Tables
 
-After deployment is live:
+After adding `DATABASE_URL`, sync the Prisma schema:
 
 ```bash
-npx prisma migrate deploy
+npx prisma db push --skip-generate
 ```
 
-Or if you prefer to create migrations:
+This creates the user, follow, repository-discovery, interaction, and daily-usage tables. Run it again after pulling future schema changes.
+
+For local development, use:
 
 ```bash
-npx prisma migrate dev --name init
+npx prisma generate
+npm run dev
 ```
 
 ## Step 5: Test the Deployment
@@ -81,7 +89,8 @@ npx prisma migrate dev --name init
 5. After authorization, you should see either:
    - Support page (if new user)
    - Features page (if returning user with requirements complete)
-6. Click "Community" → Dashboard should show profiles
+6. Open **Stars** and verify repository submission and discovery
+7. Open **Followers** and verify profile discovery and daily counters
 
 ## Step 6: Troubleshooting
 
@@ -119,7 +128,8 @@ Check your deployment platform's logs for errors:
 
 ### Monitor Rate Limits
 - GitHub API: Check `/api/rate_limit` endpoint
-- Daily follow limit: Check DailyFollowLimit table in database
+- Daily follow limit: Check `DailyDiscoveryUsage` and `DailyFollowLimit` tables in the database
+- Discovery data: Check `DiscoveryRepositorySubmission`, `DiscoveryRepositoryInteraction`, and `DiscoveryProfileInteraction`
 
 ## Rollback
 
