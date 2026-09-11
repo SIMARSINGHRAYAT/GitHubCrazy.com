@@ -35,10 +35,14 @@ npx prisma studio
 
 ## What gets created?
 
-The `db push` command creates three tables:
+The migration creates the original follow tables plus the discovery tables:
 - **User** - Stores GitHub user info and requirement tracking
 - **Follows** - Stores follow relationships between users
 - **DailyFollowLimit** - Tracks daily follow limits per user
+- **DiscoveryRepositorySubmission** - Stores active repository submissions and discovery-star totals
+- **DiscoveryRepositoryInteraction** - Stores one STAR or SKIP interaction per user and repository
+- **DiscoveryProfileInteraction** - Stores one FOLLOW or SKIP interaction per user and profile
+- **DailyDiscoveryUsage** - Stores server-enforced daily star and follow counters
 
 ## Verify it worked
 

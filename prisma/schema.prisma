@@ -33,6 +33,11 @@ model User {
   
   // Follow tracking for daily limit
   dailyFollows DailyFollowLimit[]
+  discoverySubmissions DiscoveryRepositorySubmission[]
+  repositoryInteractions DiscoveryRepositoryInteraction[]
+  profileInteractions DiscoveryProfileInteraction[] @relation("profileActor")
+  profileDiscoveryTargets DiscoveryProfileInteraction[] @relation("profileTarget")
+  dailyDiscoveryUsage DailyDiscoveryUsage[]
   
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -78,5 +83,68 @@ model DailyFollowLimit {
   
   @@unique([userId, date])
   @@index([userId])
+  @@index([date])
+}
+
+model DiscoveryRepositorySubmission {
+  id String @id @default(cuid())
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  githubRepoId String
+  repositoryName String
+  repositoryOwner String
+  repositoryUrl String
+  repositoryAvatar String?
+  githubStars Int @default(0)
+  description String?
+  status String @default("ACTIVE")
+  discoveryStars Int @default(0)
+  exposureCount Int @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  interactions DiscoveryRepositoryInteraction[]
+
+  @@unique([userId, githubRepoId])
+  @@index([status, createdAt])
+  @@index([discoveryStars])
+}
+
+model DiscoveryRepositoryInteraction {
+  id String @id @default(cuid())
+  actorId String
+  actor User @relation(fields: [actorId], references: [id], onDelete: Cascade)
+  submissionId String
+  submission DiscoveryRepositorySubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  action String
+  createdAt DateTime @default(now())
+
+  @@unique([actorId, submissionId])
+  @@index([submissionId, action])
+}
+
+model DiscoveryProfileInteraction {
+  id String @id @default(cuid())
+  actorId String
+  actor User @relation("profileActor", fields: [actorId], references: [id], onDelete: Cascade)
+  targetId String
+  target User @relation("profileTarget", fields: [targetId], references: [id], onDelete: Cascade)
+  action String
+  createdAt DateTime @default(now())
+
+  @@unique([actorId, targetId])
+  @@index([targetId, action])
+}
+
+model DailyDiscoveryUsage {
+  id String @id @default(cuid())
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date DateTime @db.Date
+  starsUsed Int @default(0)
+  followsUsed Int @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, date])
   @@index([date])
 }
