@@ -23,13 +23,12 @@ import {
   Star, AlertCircle, RotateCcw, Sparkles, X,
   ChevronRight, Pause, ShieldCheck, ShieldAlert,
   GitPullRequest, GitMerge, GitBranch, Eye, EyeOff, Users, Award,
-  Rocket, LogIn, ExternalLink,
+  Rocket, LogIn, ExternalLink, ArrowLeft,
 } from 'lucide-react';
 import { SupportProject } from './components/SupportProject';
 import { FeatureSelection } from './components/FeatureSelection';
 import { IncreaseStars } from './components/IncreaseStars';
 import { IncreaseFollowers } from './components/IncreaseFollowers';
-import { Dashboard } from './components/Dashboard';
 
 // ─── Constants ───────────────────────────────────────────────────────
 const MAX_ITEMS = 300;
@@ -115,7 +114,7 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [step, setStep] = useState(0);
-  const [appStep, setAppStep] = useState<'welcome' | 'support' | 'features' | 'badges' | 'stars' | 'followers' | 'dashboard'>('welcome');
+  const [appStep, setAppStep] = useState<'welcome' | 'support' | 'features' | 'badges' | 'stars' | 'followers'>('welcome');
   const [showAuth, setShowAuth] = useState(false);
   const [delayMs, setDelayMs] = useState(400);
 
@@ -557,32 +556,34 @@ export default function App() {
                 setAppStep('stars');
               } else if (feature === 'followers') {
                 setAppStep('followers');
-              } else if (feature === 'dashboard') {
-                setAppStep('dashboard');
               }
            }} />
         )}
 
         {/* INCREASE STARS */}
         {appStep === 'stars' && token && user && (
-           <IncreaseStars token={token} user={user} repos={repos} />
+           <div className="max-w-5xl mx-auto">
+             <button onClick={() => setAppStep('features')} aria-label="Back to features" title="Back to features" className="mb-8 p-3 bg-white/5 border border-white/10 text-gray-400 hover:text-white transition-all">
+               <ArrowLeft className="w-5 h-5" />
+             </button>
+             <IncreaseStars token={token} user={user} repos={repos} />
+           </div>
         )}
 
         {/* INCREASE FOLLOWERS */}
         {appStep === 'followers' && token && user && (
-           <IncreaseFollowers token={token} user={user} />
-        )}
-
-        {/* DASHBOARD */}
-        {appStep === 'dashboard' && token && (
-           <Dashboard token={token} onLogout={disconnect} onBack={() => setAppStep('features')} />
+            <div className="max-w-5xl mx-auto">
+             <button onClick={() => setAppStep('features')} aria-label="Back to features" title="Back to features" className="mb-8 p-3 bg-white/5 border border-white/10 text-gray-400 hover:text-white transition-all">
+              <ArrowLeft className="w-5 h-5" />
+             </button>
+             <IncreaseFollowers token={token} user={user} />
+            </div>
         )}
 
         {/* STEP 1 */}
         {appStep === 'badges' && step === 1 && (
           <div className="max-w-3xl mx-auto staggered-list text-center">
             <div className="flex justify-end gap-3 mb-5">
-              <button onClick={() => setAppStep('dashboard')} className="px-6 py-2 rounded-xl bg-purple-500/10 border border-purple-500/30 text-[10px] font-black uppercase tracking-widest text-purple-400 hover:bg-purple-500/20 transition-all">Dashboard</button>
               <button onClick={disconnect} className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-gray-500 hover:text-red-400 transition-all">Log out</button>
             </div>
             <div className="glass-card p-6 sm:p-10 lg:p-14 relative overflow-visible">
@@ -657,7 +658,6 @@ export default function App() {
               <div className="flex items-center justify-between">
                 <p className="text-xs font-black uppercase tracking-[0.25em] text-gray-500">Choose an achievement workflow</p>
                 <div className="flex gap-3">
-                  <button onClick={() => setAppStep('dashboard')} className="px-6 py-2 rounded-xl bg-purple-500/10 border border-purple-500/30 text-[10px] font-black uppercase tracking-widest text-purple-400 hover:bg-purple-500/20 transition-all">Dashboard</button>
                   <button onClick={disconnect} className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-gray-500 hover:text-red-400 transition-all">Log out</button>
                 </div>
               </div>

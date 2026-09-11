@@ -1,8 +1,8 @@
 import React from 'react';
-import { Award, Star, Users, Heart, ChevronRight } from 'lucide-react';
+import { Award, Star, Users, ChevronRight } from 'lucide-react';
 
 interface FeatureSelectionProps {
-  onSelectFeature: (feature: 'badges' | 'stars' | 'followers' | 'dashboard') => void;
+  onSelectFeature: (feature: 'badges' | 'stars' | 'followers') => void;
 }
 
 export function FeatureSelection({ onSelectFeature }: FeatureSelectionProps) {
@@ -13,7 +13,7 @@ export function FeatureSelection({ onSelectFeature }: FeatureSelectionProps) {
         Select a tool from the GitHubCrazy ecosystem to enhance your GitHub profile.
       </p>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Badges Feature */}
         <button
           onClick={() => onSelectFeature('badges')}
@@ -65,22 +65,6 @@ export function FeatureSelection({ onSelectFeature }: FeatureSelectionProps) {
           </div>
         </button>
 
-        {/* Community Dashboard */}
-        <button
-          onClick={() => onSelectFeature('dashboard')}
-          className="glass-card p-8 flex flex-col items-center justify-between gap-6 hover:bg-white/5 btn-hover-effect border-pink-500/30 group"
-        >
-          <div className="w-16 h-16 rounded-2xl bg-pink-500/10 flex items-center justify-center border border-pink-500/20 text-pink-400">
-            <Heart className="w-8 h-8" />
-          </div>
-          <div>
-            <h3 className="text-lg font-black text-white uppercase tracking-widest mb-2">Community</h3>
-            <p className="text-xs text-gray-400 leading-relaxed">Discover and follow community members.</p>
-          </div>
-          <div className="w-full mt-4 flex items-center justify-center text-xs font-black uppercase text-pink-400 group-hover:text-pink-300">
-            Select <ChevronRight className="w-4 h-4 ml-1" />
-          </div>
-        </button>
       </div>
     </div>
   );

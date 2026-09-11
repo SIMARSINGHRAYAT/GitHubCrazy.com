@@ -124,7 +124,7 @@ export function SupportProject({ token, onComplete }: SupportProjectProps) {
             isStarred && isFollowed ? "premium-gradient-purple text-white btn-hover-effect" : "bg-white/5 text-gray-600 cursor-not-allowed"
           )}
         >
-          Continue to Dashboard <ChevronRight className="w-4 h-4" />
+          Continue to Features <ChevronRight className="w-4 h-4" />
         </button>
       </div>
     </div>
