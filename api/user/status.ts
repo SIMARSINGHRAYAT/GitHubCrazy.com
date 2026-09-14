@@ -60,7 +60,8 @@ export default async function handler(
     });
 
     if (!userRes.ok) {
-      return res.status(401).json({ error: 'Invalid GitHub token' });
+      const errorText = await userRes.text().catch(() => '');
+      return res.status(401).json({ error: `Invalid GitHub token. GitHub API responded with ${userRes.status}. ${errorText}` });
     }
 
     const githubUser = await userRes.json();
