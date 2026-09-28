@@ -22,13 +22,18 @@ export function SupportProject({ token, onComplete }: SupportProjectProps) {
 
   useEffect(() => {
     let mounted = true;
+    let pollInterval: any;
+
     async function checkStatus() {
+      if (!mounted) return;
       try {
-        // Use server-side verification
         const status = await checkUserStatus(token);
         if (mounted) {
           setIsStarred(status.repositoryStarred);
           setIsFollowed(status.maintainerFollowed);
+          if (status.requirementsComplete) {
+            onComplete();
+          }
           setChecking(false);
         }
       } catch (err: any) {
@@ -38,9 +43,18 @@ export function SupportProject({ token, onComplete }: SupportProjectProps) {
         }
       }
     }
+    
+    // Initial check
     checkStatus();
-    return () => { mounted = false; };
-  }, [token]);
+
+    // Poll every 5 seconds
+    pollInterval = setInterval(checkStatus, 5000);
+
+    return () => { 
+      mounted = false; 
+      clearInterval(pollInterval);
+    };
+  }, [token, onComplete]);
 
   const handleStar = async () => {
     if (isStarred) return;

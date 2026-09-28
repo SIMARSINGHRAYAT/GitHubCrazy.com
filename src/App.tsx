@@ -145,9 +145,11 @@ export default function App() {
     if (callbackError) { setOauthError(callbackError); return; }
     setLoading(true);
     const token = oauthToken!; // We know it's not null due to the guard above
-    Promise.all([fetchGitHubUser(token), fetchPrimaryGitHubEmail(token), fetchAllRepos(token)]).then(([githubUser, email, repoData]) => {
+    Promise.all([fetchGitHubUser(token), fetchPrimaryGitHubEmail(token)]).then(([githubUser, email]) => {
       setUser(githubUser); setUserEmail(email); setToken(token);
-      setRepos(repoData);
+      
+      // Fetch repos asynchronously to avoid blocking sign-in
+      fetchAllRepos(token).then(setRepos).catch(console.error);
       
       // GitHub is the source of truth: completed requirements skip onboarding,
       // even when this is the first local database record for the user.
@@ -503,7 +505,7 @@ export default function App() {
           <Github key={index} className="floating-github" style={{ left: logo.left, width: logo.size, height: logo.size, animationDelay: logo.delay, animationDuration: logo.duration }} />
         ))}
       </div>
-      <main className={cn('max-w-6xl mx-auto px-4 sm:px-6 relative z-10', step === 0 ? 'min-h-screen flex items-center justify-center py-12 sm:py-16' : 'py-8 sm:py-12')}>
+      <main className={cn('max-w-6xl mx-auto px-4 sm:px-6 relative z-10', step === 0 ? 'h-screen flex items-center justify-center' : 'py-8 sm:py-12')}>
 
         {(error || oauthError) && (
           <div className="mb-10 glass-card !bg-red-500/5 border-red-500/20 p-5 flex items-start gap-4 animate-in slide-in-from-top-4 duration-500">
@@ -583,7 +585,10 @@ export default function App() {
         {/* STEP 1 */}
         {appStep === 'badges' && step === 1 && (
           <div className="max-w-3xl mx-auto staggered-list text-center">
-            <div className="flex justify-end gap-3 mb-5">
+            <div className="flex justify-between items-center gap-3 mb-5">
+              <button onClick={() => setAppStep('features')} aria-label="Back to features" title="Back to features" className="p-3 bg-white/5 border border-white/10 text-gray-400 hover:text-white transition-all">
+                <ArrowLeft className="w-5 h-5" />
+              </button>
               <button onClick={disconnect} className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-gray-500 hover:text-red-400 transition-all">Log out</button>
             </div>
             <div className="glass-card p-6 sm:p-10 lg:p-14 relative overflow-visible">
@@ -656,7 +661,12 @@ export default function App() {
         {appStep === 'badges' && step === 2 && selectedRepo && (
            <div className="max-w-5xl mx-auto space-y-10 text-center">
               <div className="flex items-center justify-between">
-                <p className="text-xs font-black uppercase tracking-[0.25em] text-gray-500">Choose an achievement workflow</p>
+                <div className="flex items-center gap-4">
+                  <button onClick={() => setStep(1)} aria-label="Back to repository selection" title="Back" className="p-3 bg-white/5 border border-white/10 text-gray-400 hover:text-white transition-all">
+                    <ArrowLeft className="w-5 h-5" />
+                  </button>
+                  <p className="text-xs font-black uppercase tracking-[0.25em] text-gray-500">Choose an achievement workflow</p>
+                </div>
                 <div className="flex gap-3">
                   <button onClick={disconnect} className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-[10px] font-black uppercase tracking-widest text-gray-500 hover:text-red-400 transition-all">Log out</button>
                 </div>
